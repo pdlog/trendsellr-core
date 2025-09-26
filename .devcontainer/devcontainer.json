@@ -1,6 +1,6 @@
 {
   "name": "TrendSellr API (OpenJDK Community Build)",
-  "image": "maven:3.9.5-eclipse-temurin-21-jammy",
+  "image": "maven:3.9.5-eclipse-temurin-21",
   "customizations": {
     "vscode": {
       "extensions": [
