@@ -1,14 +1,6 @@
 {
   "name": "TrendSellr API (OpenJDK Community Build)",
-  "image": "eclipse-temurin:21-jdk-jammy",
-  "features": {
-    "ghcr.io/devcontainers/features/maven:1": {
-        "version": "3.9"
-    }
-  },
-
-  // 3. EL RESTO DE LA CONFIGURACIÓN:
-  // Esto se mantiene exactamente igual que antes.
+  "image": "maven:3.9.5-eclipse-temurin-21-jammy",
   "customizations": {
     "vscode": {
       "extensions": [
