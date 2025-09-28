@@ -33,6 +33,10 @@ jobs:
 
       - name: Build, Test and Analyze with SonarCloud
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Token para SonarCloud
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
-        run: mvn -f code/pom.xml -B verify sonar:sonar
+        run: >
+          mvn -f code/pom.xml -B verify sonar:sonar 
+          -Dsonar.pullrequest.key=${{ github.event.pull_request.number }} 
+          -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }} 
+          -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
