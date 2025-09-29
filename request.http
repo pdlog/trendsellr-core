@@ -1,0 +1,15 @@
+### Crear un nuevo producto (POST)
+POST http://localhost:8080/products
+Content-Type: application/json
+
+{
+  "name": "Nintendo Switch OLED",
+  "url": "https://www.amazon.es/dp/B098TV51M6",
+  "source": "Amazon"
+}
+
+### Separador de peticiones (necesario)
+###
+
+### Obtener todos los productos (GET)
+GET http://localhost:8080/products
