@@ -1,7 +1,7 @@
 logging:
   level:
     com.trendsellr: DEBUG
-    org.springframework: INFO
+    org.springframework: ERROR
   pattern:
     console: "%d{HH:mm:ss.SSS} %highlight(%-5level) --- [%15.15t] [%C{0}] %msg%n"
 spring:
