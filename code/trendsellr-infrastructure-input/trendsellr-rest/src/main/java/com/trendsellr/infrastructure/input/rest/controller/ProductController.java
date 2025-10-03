@@ -3,46 +3,56 @@ package com.trendsellr.infrastructure.input.rest.controller;
 import com.trendsellr.application.usecase.CreateProductUseCase;
 import com.trendsellr.application.usecase.FindAllProductsUseCase;
 import com.trendsellr.application.usecase.FindProductByIdUseCase;
-import com.trendsellr.domain.model.Product;
+import com.trendsellr.infrastructure.input.rest.api.ProductsApi;
+import com.trendsellr.infrastructure.input.rest.dto.ProductDTO;
+import com.trendsellr.infrastructure.input.rest.mapper.ProductDTOMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-@RequestMapping("/products")
 @RequiredArgsConstructor
-public class ProductController {
+public class ProductController implements ProductsApi {
 
     private final CreateProductUseCase createProductUseCase;
     private final FindAllProductsUseCase findAllProductsUseCase;
     private final FindProductByIdUseCase findProductByIdUseCase;
 
-    @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        log.info("REST request to create Product: {}", product);
-        Product createdProduct = createProductUseCase.dispatch(product);
-        return ResponseEntity
-                .created(URI.create("/products/" + createdProduct.getId()))
-                .body(createdProduct);
+    private final ProductDTOMapper productDtoMapper;
+
+    @Override
+    public ResponseEntity<ProductDTO> createProduct(ProductDTO productDto) {
+        log.info("REST request to create Product: {}", productDTO);
+
+        var productToCreate = this.productDtoMapper.toDomain(productDTO);
+        Product createdProduct = this.createProductUseCase.dispatch(product);
+
+        return new ResponseEntity<>(this.productDtoMapper.toDto(createdProduct), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable String id) {
+    @Override
+    public ResponseEntity<ProductDTO> getProductById(String id) {
         log.info("REST request to get Product by id: {}", id);
+
         return findProductByIdUseCase.dispatch(id)
-                .map(ResponseEntity::ok) // Si lo encuentra, devuelve 200 OK con el producto
-                .orElse(ResponseEntity.notFound().build()); // Si no, devuelve 404 Not Found
+                .map(this.productDtoMapper::toDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
+    @Override
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
         log.info("REST request to get all Products");
-        List<Product> products = findAllProductsUseCase.dispatch();
+        List<ProductDTO> products = findAllProductsUseCase.dispatch().stream()
+            .map(this.productDtoMapper::toDto)
+            .toList();
+
         return ResponseEntity.ok(products);
     }
 }
