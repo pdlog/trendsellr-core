@@ -15,4 +15,5 @@ public class Product {
     private String name;
     private String url;
     private String source;
+    private Metadata metadata;
 }

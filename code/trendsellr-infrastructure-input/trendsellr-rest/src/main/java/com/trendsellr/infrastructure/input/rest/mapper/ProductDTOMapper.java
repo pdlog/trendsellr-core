@@ -1,10 +1,14 @@
 package com.trendsellr.infrastructure.input.rest.mapper;
 
 import com.trendsellr.domain.model.Product;
+import com.trendsellr.infrastructure.input.rest.dto.ProductCreateDTO;
 import com.trendsellr.infrastructure.input.rest.dto.ProductDTO;
+import com.trendsellr.input.common.rest.mapper.UriMapper;
+import com.trendsellr.input.common.rest.mapper.config.CommonMapperConfig;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(config = CommonMapperConfig.class, uses = {UriMapper.class})
 public interface ProductDTOMapper {
 
     /**
@@ -15,9 +19,11 @@ public interface ProductDTOMapper {
     ProductDTO toDto(Product product);
 
     /**
-     * Converts a ProductDTO to a Product domain model.
-     * @param productDTO The DTO.
+     * Converts a ProductCreateDTO to a Product domain model.
+     * @param productCreateDto The DTO.
      * @return The domain model.
      */
-    Product toDomain(ProductDTO productDTO);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "metadata", ignore = true)
+    Product toDomain(ProductCreateDTO productCreateDto);
 }

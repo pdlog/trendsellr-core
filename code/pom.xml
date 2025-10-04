@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.4</version>
+        <version>3.5.6</version>
         <relativePath/>
     </parent>
 
@@ -27,6 +27,7 @@
         <spotbugs.version>4.8.5.0</spotbugs.version>
         <swagger.version>2.2.22</swagger.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <commons-lang3.version>3.18.0</commons-lang3.version>
     </properties>
 
     <modules>
@@ -36,8 +37,9 @@
         <module>trendsellr-reports</module>
         <module>trendsellr-infrastructure-output/trendsellr-persistence-mongodb</module>
         <module>trendsellr-infrastructure-input/trendsellr-rest</module>
+        <module>trendsellr-infrastructure-input/trendsellr-common</module>
     </modules>
-    
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -49,7 +51,7 @@
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-core-jakarta</artifactId>
-                <version>${swagger.version}</version> 
+                <version>${swagger.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mapstruct</groupId>
@@ -58,7 +60,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    
+
     <build>
         <pluginManagement>
             <plugins>

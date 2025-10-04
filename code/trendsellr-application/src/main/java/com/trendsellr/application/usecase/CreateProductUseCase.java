@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 /**
  * Use Case for creating a new product.
  */
@@ -21,7 +23,9 @@ public class CreateProductUseCase {
      * @return The created product.
      */
     public Product dispatch(Product product) {
-        log.info("Create Product with id '{}'", product.getId());
+        log.info("Create Product with name '{}'", product.getName());
+
+        product.setId(UUID.randomUUID().toString());
 
         return productRepository.save(product);
     }

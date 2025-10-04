@@ -1,7 +1,8 @@
 package com.trendsellr.domain.repository;
 
 import com.trendsellr.domain.model.Product;
-import java.util.List;
+import com.trendsellr.domain.model.ProductCollection;
+
 import java.util.Optional;
 
 /**
@@ -18,17 +19,19 @@ public interface ProductRepository {
     Product save(Product product);
 
     /**
-     * Finds a product by its unique ID.
+     * Finds a product by its unique product ID.
      *
-     * @param id The ID of the product.
+     * @param productId The unique product ID of the product.
      * @return An Optional containing the product if found, or empty otherwise.
      */
-    Optional<Product> findById(String id);
+    Optional<Product> findByProductId(String productId);
 
     /**
-     * Retrieves all products.
+     * Retrieves all products with pagination support.
      *
-     * @return A list of all products.
+     * @param page     The page number to retrieve (0-based).
+     * @param pageSize The number of products per page.
+     * @return A ProductCollection containing the products and pagination metadata.
      */
-    List<Product> findAll();
+    ProductCollection findAll(Long page, Integer pageSize);
 }

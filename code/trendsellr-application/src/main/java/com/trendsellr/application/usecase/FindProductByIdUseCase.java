@@ -20,7 +20,7 @@ public class FindProductByIdUseCase {
 
     public Optional<Product> dispatch(String id) {
         log.info("Find Product by id '{}'", id);
-        
-        return productRepository.findById(id);
+
+        return productRepository.findByProductId(id);
     }
 }

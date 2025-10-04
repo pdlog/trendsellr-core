@@ -35,7 +35,17 @@
         </dependency>
         <dependency>
             <groupId>com.trendsellr</groupId>
+            <artifactId>trendsellr-input-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.trendsellr</groupId>
             <artifactId>trendsellr-persistence-mongodb</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.trendsellr</groupId>
+            <artifactId>trendsellr-boot</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
