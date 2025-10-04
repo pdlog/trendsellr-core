@@ -43,6 +43,19 @@ public class MongoProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
+    public Optional<Product> update(final String productId, final Product updatedProduct) {
+        log.info("Updating product with id: {}", productId);
+
+        return this.springProductRepository.findByProductId(productId).map(existingProduct -> {
+            ProductEntity productToUpdate = this.productRepositoryMapper.toEntity(updatedProduct);
+            this.productRepositoryMapper.updateProduct(productToUpdate, existingProduct);
+            ProductEntity updatedEntity = this.springProductRepository.save(existingProduct);
+
+            return this.productRepositoryMapper.toDomain(updatedEntity);
+        });
+    }
+
+    @Override
     public Optional<Product> findByProductId(final String productId) {
         log.info("Finding product by id: {}", productId);
 

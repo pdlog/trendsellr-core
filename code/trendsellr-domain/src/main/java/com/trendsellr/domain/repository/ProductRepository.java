@@ -6,7 +6,7 @@ import com.trendsellr.domain.model.ProductCollection;
 import java.util.Optional;
 
 /**
- * Defines the contract that infrastructure adapters must implement.
+ * Defines the contract that infrastructure must implement.
  */
 public interface ProductRepository {
 
@@ -17,6 +17,15 @@ public interface ProductRepository {
      * @return The saved product.
      */
     Product save(Product product);
+
+    /**
+     * Updates an existing product identified by its unique ID.
+     *
+     * @param id      The unique ID of the product to update.
+     * @param product The product data to update.
+     * @return An Optional containing the updated product if found, or empty otherwise.
+     */
+    Optional<Product> update(String id, Product product);
 
     /**
      * Finds a product by its unique product ID.

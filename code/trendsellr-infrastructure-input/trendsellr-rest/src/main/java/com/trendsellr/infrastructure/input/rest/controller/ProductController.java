@@ -3,13 +3,11 @@ package com.trendsellr.infrastructure.input.rest.controller;
 import com.trendsellr.application.usecase.CreateProductUseCase;
 import com.trendsellr.application.usecase.FindAllProductsUseCase;
 import com.trendsellr.application.usecase.FindProductByIdUseCase;
+import com.trendsellr.application.usecase.UpdateProductUseCase;
 import com.trendsellr.domain.model.Product;
 import com.trendsellr.domain.model.ProductCollection;
 import com.trendsellr.infrastructure.input.rest.api.ProductsApi;
-import com.trendsellr.infrastructure.input.rest.dto.ProductCollectionDTO;
-import com.trendsellr.infrastructure.input.rest.dto.ProductCreateRequestDTO;
-import com.trendsellr.infrastructure.input.rest.dto.ProductIdDTO;
-import com.trendsellr.infrastructure.input.rest.dto.ProductResponseDTO;
+import com.trendsellr.infrastructure.input.rest.dto.*;
 import com.trendsellr.infrastructure.input.rest.mapper.ProductCollectionDTOMapper;
 import com.trendsellr.infrastructure.input.rest.mapper.ProductDTOMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController implements ProductsApi {
 
     private final CreateProductUseCase createProductUseCase;
+    private final UpdateProductUseCase updateProductUseCase;
     private final FindAllProductsUseCase findAllProductsUseCase;
     private final FindProductByIdUseCase findProductByIdUseCase;
 
@@ -42,6 +41,16 @@ public class ProductController implements ProductsApi {
         productIdDto.setId(createdProduct.getId());
 
         return new ResponseEntity<>(productIdDto, HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<Void> updateProduct(String id, ProductUpdateRequestDTO productUpdateRequestDto) {
+        log.info("REST request to update Product with id '{}': {}", id, productUpdateRequestDto);
+
+        var updatedProduct = this.productDtoMapper.toDomain(productUpdateRequestDto.getProduct());
+        this.updateProductUseCase.dispatch(id, updatedProduct);
+
+        return ResponseEntity.noContent().build();
     }
 
     @Override
