@@ -2,18 +2,18 @@ package com.trendsellr.infrastructure.output.persistence.mongodb.repository.mapp
 
 import com.trendsellr.domain.constants.DomainConstants;
 import com.trendsellr.infrastructure.output.persistence.mongodb.repository.mapper.config.RepositoryMapperConfig;
-import org.mapstruct.Mapper;
-
 import java.time.OffsetDateTime;
+import java.util.Objects;
+import org.mapstruct.Mapper;
 
 @Mapper(config = RepositoryMapperConfig.class)
 public interface OffsetDateTimeRepositoryMapper {
 
-    default String toString(OffsetDateTime offsetDateTime) {
-        return offsetDateTime.format(DomainConstants.DATE_TIME_FORMAT);
-    }
+  static OffsetDateTime fromString(final String dateTime) {
+    return Objects.nonNull(dateTime) ? OffsetDateTime.parse(dateTime) : null;
+  }
 
-    default OffsetDateTime toOffsetDateTime(final String dateTimeString) {
-        return OffsetDateTime.parse(dateTimeString, DomainConstants.DATE_TIME_FORMAT);
-    }
+  static String toString(final OffsetDateTime dateTime) {
+    return Objects.nonNull(dateTime) ? dateTime.format(DomainConstants.DATE_TIME_FORMAT) : null;
+  }
 }

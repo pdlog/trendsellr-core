@@ -56,16 +56,14 @@ public class ProductController implements ProductsApi {
     @Override
     public ResponseEntity<ProductResponseDTO> getProductById(String id) {
         log.info("REST request to get Product by id: {}", id);
+        Product product = findProductByIdUseCase.dispatch(id);
 
-        return findProductByIdUseCase.dispatch(id)
-                .map(this.productDtoMapper::toDto)
-                .map(productDto -> {
-                    ProductResponseDTO responseDto = new ProductResponseDTO();
-                    responseDto.setProduct(productDto);
-                    return responseDto;
-                })
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        ProductDTO productDTO = this.productDtoMapper.toDto(product);
+
+        ProductResponseDTO response = new ProductResponseDTO();
+        response.setProduct(productDTO);
+
+        return ResponseEntity.ok(response);
     }
 
     @Override

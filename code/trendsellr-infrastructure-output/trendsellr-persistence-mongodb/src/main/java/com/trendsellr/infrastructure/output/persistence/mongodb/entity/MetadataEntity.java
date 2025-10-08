@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MetadataEntity {
 
-    private String creationDateTime;
+  private String creationDateTime;
 
-    private String lastUpdatedDateTime;
+  private String lastUpdatedDateTime;
 
-    private Integer version;
+  private Integer version;
 }

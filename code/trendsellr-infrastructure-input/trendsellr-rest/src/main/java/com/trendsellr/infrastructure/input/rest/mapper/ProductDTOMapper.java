@@ -38,6 +38,7 @@ public interface ProductDTOMapper {
      */
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "source", ignore = true)
     @Mapping(target = "metadata", ignore = true)
     Product toDomain(ProductUpdateDTO productUpdateDto);
 }
