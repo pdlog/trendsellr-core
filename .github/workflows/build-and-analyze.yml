@@ -33,8 +33,13 @@ jobs:
       - name: Build and run tests with JaCoCo
         run: mvn -f code/pom.xml -B verify
 
-      - name: Upload coverage to Codacy
-        uses: codacy/codacy-coverage-reporter-action@v1
-        with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          coverage-reports: code/trendsellr-reports/target/site/jacoco-aggregate/jacoco.xml
+      - name: Download Codacy Reporter
+        run: |
+          curl -Ls https://github.com/codacy/codacy-coverage-reporter/releases/latest/download/codacy-coverage-reporter-linux > codacy-reporter
+          chmod +x codacy-reporter
+
+      - name: Run Codacy Reporter
+        run: |
+          ./codacy-reporter report -l Java -r code/trendsellr-reports/target/site/jacoco-aggregate/jacoco.xml
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
