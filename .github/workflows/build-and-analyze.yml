@@ -38,8 +38,17 @@ jobs:
           curl -Ls https://github.com/codacy/codacy-coverage-reporter/releases/latest/download/codacy-coverage-reporter-linux > codacy-reporter
           chmod +x codacy-reporter
 
-      - name: Run Codacy Reporter
+      - name: Run Codacy Reporter for Pull Request
+        if: github.event_name == 'pull_request'
         run: |
-          ./codacy-reporter report -l Java -r code/trendsellr-reports/target/site/jacoco-aggregate/jacoco.xml
+          ./codacy-reporter report -l Java -r code/trendsellr-reports/target/site/jacoco-aggregate/jacoco.xml --partial
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+
+      - name: Run and Finalize Codacy Reporter for Branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        run: |
+          ./codacy-reporter report -l Java -r code/trendsellr-reports/target/site/jacoco-aggregate/jacoco.xml --commit-uuid ${{ github.sha }}
+          ./codacy-reporter final
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
