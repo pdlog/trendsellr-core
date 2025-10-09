@@ -7,8 +7,8 @@ on:
     branches: [ develop ]
 
 jobs:
-  build_and_test:
-    name: Build & Test
+  build-and-analyze:
+    name: Build, Test & Analyze
     runs-on: ubuntu-latest
 
     steps:
@@ -31,25 +31,8 @@ jobs:
       - name: Build and run tests with JaCoCo
         run: mvn -f code/pom.xml -B verify
 
-      - name: Upload JaCoCo report
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-report
-          path: code/trendsellr-reports/target/site/jacoco-aggregate/jacoco.xml
-
-  coverage:
-    name: Send Coverage to Codacy
-    needs: [build_and_test]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download JaCoCo report
-        uses: actions/download-artifact@v4
-        with:
-          name: jacoco-report
-
       - name: Upload coverage to Codacy
         uses: codacy/codacy-coverage-reporter-action@v1
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          coverage-reports: jacoco.xml
+          coverage-reports: code/trendsellr-reports/target/site/jacoco-aggregate/jacoco.xml
