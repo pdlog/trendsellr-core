@@ -1,11 +1,11 @@
 package com.trendsellr.infrastructure.input.rest.mapper;
 
 import com.trendsellr.domain.model.Product;
+import com.trendsellr.infrastructure.common.mapper.CommonMapperConfig;
 import com.trendsellr.infrastructure.input.rest.dto.ProductCreateDTO;
 import com.trendsellr.infrastructure.input.rest.dto.ProductDTO;
 import com.trendsellr.infrastructure.input.rest.dto.ProductUpdateDTO;
 import com.trendsellr.input.common.rest.mapper.UriMapper;
-import com.trendsellr.input.common.rest.mapper.config.CommonMapperConfig;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

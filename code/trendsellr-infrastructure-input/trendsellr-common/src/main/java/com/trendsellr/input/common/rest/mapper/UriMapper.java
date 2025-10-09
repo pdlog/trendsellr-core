@@ -1,6 +1,6 @@
 package com.trendsellr.input.common.rest.mapper;
 
-import com.trendsellr.input.common.rest.mapper.config.CommonMapperConfig;
+import com.trendsellr.infrastructure.common.mapper.CommonMapperConfig;
 import java.net.URI;
 import org.mapstruct.Mapper;
 

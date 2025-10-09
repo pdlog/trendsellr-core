@@ -7,15 +7,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.trendsellr.BaseTestIT;
 import com.trendsellr.domain.exception.error.ProductDefaultError;
 import com.trendsellr.domain.model.Product;
-import com.trendsellr.domain.repository.ProductRepository;
 import com.trendsellr.infrastructure.input.rest.dto.ProductUpdateDTO;
 import com.trendsellr.infrastructure.input.rest.dto.ProductUpdateRequestDTO;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,29 +20,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-class ProductControllerUpdateProductIT extends BaseTestIT {
+class ProductControllerUpdateProductIT extends BaseProductControllerTestIT {
 
   private static final String UPDATE_PRODUCT_URL = "/api/public/v1/products/{id}";
 
   private final MockMvc mockMvc;
 
-  private final ProductRepository productRepository;
-
   private final ObjectMapper objectMapper;
-
-  private Product existingProduct;
-
-  @BeforeEach
-  void setUp() {
-    this.productRepository.deleteAll();
-    this.existingProduct = this.productRepository.save(
-        Product.builder()
-            .id(UUID.randomUUID().toString())
-            .name("Original Name")
-            .source("OriginalSource")
-            .build()
-    );
-  }
 
   @Test
   @DisplayName("Given an existing product ID and valid data, when PUT /products/{id} is called, then should update product and return 204 No Content")
@@ -64,7 +45,7 @@ class ProductControllerUpdateProductIT extends BaseTestIT {
     final Product updatedProduct = this.productRepository.findByProductId(
         this.existingProduct.getId()).orElseThrow();
     assertEquals("Updated Name", updatedProduct.getName());
-    assertEquals("OriginalSource",
+    assertEquals("DefaultSource",
         updatedProduct.getSource());
   }
 

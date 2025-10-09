@@ -36,6 +36,7 @@
     <module>trendsellr-domain</module>
     <module>trendsellr-application</module>
     <module>trendsellr-reports</module>
+    <module>trendsellr-infrastructure-common</module>
     <module>trendsellr-infrastructure-output/trendsellr-persistence-mongodb</module>
     <module>trendsellr-infrastructure-input/trendsellr-rest</module>
     <module>trendsellr-infrastructure-input/trendsellr-common</module>

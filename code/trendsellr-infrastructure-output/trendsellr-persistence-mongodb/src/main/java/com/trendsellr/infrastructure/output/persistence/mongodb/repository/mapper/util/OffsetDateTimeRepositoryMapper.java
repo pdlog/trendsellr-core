@@ -1,12 +1,12 @@
 package com.trendsellr.infrastructure.output.persistence.mongodb.repository.mapper.util;
 
 import com.trendsellr.domain.constants.DomainConstants;
-import com.trendsellr.infrastructure.output.persistence.mongodb.repository.mapper.config.RepositoryMapperConfig;
+import com.trendsellr.infrastructure.common.mapper.CommonMapperConfig;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import org.mapstruct.Mapper;
 
-@Mapper(config = RepositoryMapperConfig.class)
+@Mapper(config = CommonMapperConfig.class)
 public interface OffsetDateTimeRepositoryMapper {
 
   static OffsetDateTime fromString(final String dateTime) {

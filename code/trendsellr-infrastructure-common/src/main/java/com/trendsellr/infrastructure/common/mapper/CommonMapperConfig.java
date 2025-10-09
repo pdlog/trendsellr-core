@@ -1,4 +1,4 @@
-package com.trendsellr.infrastructure.output.persistence.mongodb.repository.mapper.config;
+package com.trendsellr.infrastructure.common.mapper;
 
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.InjectionStrategy;
@@ -9,6 +9,6 @@ import org.mapstruct.NullValueMappingStrategy;
 @MapperConfig(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR,
     collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
     nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL)
-public interface RepositoryMapperConfig {
+public interface CommonMapperConfig {
 
 }
