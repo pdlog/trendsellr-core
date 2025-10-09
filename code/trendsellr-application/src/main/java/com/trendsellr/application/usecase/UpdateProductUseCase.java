@@ -25,7 +25,7 @@ public class UpdateProductUseCase {
         .creationDateTime(null)
         .build());
 
-    productRepository.update(id, updatedProduct)
+    this.productRepository.update(id, updatedProduct)
         .orElseThrow(() -> new ProductNotFoundException("Product with id " + id + " not found"));
   }
 }

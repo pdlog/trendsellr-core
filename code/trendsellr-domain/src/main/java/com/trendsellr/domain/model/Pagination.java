@@ -11,11 +11,11 @@ import lombok.Data;
 @Builder
 public class Pagination {
 
-    private Long totalElements;
+  private Long totalElements;
 
-    private Integer totalPages;
+  private Integer totalPages;
 
-    private Long page;
+  private Long page;
 
-    private Integer pageSize;
+  private Integer pageSize;
 }

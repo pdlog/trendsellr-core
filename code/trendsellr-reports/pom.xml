@@ -1,70 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.trendsellr</groupId>
-        <artifactId>trendsellr-core</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
+  <parent>
+    <groupId>com.trendsellr</groupId>
+    <artifactId>trendsellr-core</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
 
-    <artifactId>trendsellr-reports</artifactId>
-    <packaging>pom</packaging>
+  <artifactId>trendsellr-reports</artifactId>
+  <packaging>pom</packaging>
 
-    <name>TrendSellr :: Reports</name>
-    <description>Module for aggregating code quality reports</description>
+  <name>TrendSellr :: Reports</name>
+  <description>Module for aggregating code quality reports</description>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.trendsellr</groupId>
-            <artifactId>trendsellr-application</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.trendsellr</groupId>
-            <artifactId>trendsellr-domain</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.trendsellr</groupId>
-            <artifactId>trendsellr-rest</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.trendsellr</groupId>
-            <artifactId>trendsellr-input-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.trendsellr</groupId>
-            <artifactId>trendsellr-persistence-mongodb</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.trendsellr</groupId>
-            <artifactId>trendsellr-boot</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>com.trendsellr</groupId>
+      <artifactId>trendsellr-application</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.trendsellr</groupId>
+      <artifactId>trendsellr-rest</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.trendsellr</groupId>
+      <artifactId>trendsellr-input-common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.trendsellr</groupId>
+      <artifactId>trendsellr-persistence-mongodb</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.trendsellr</groupId>
+      <artifactId>trendsellr-boot</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>report-aggregate</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>report-aggregate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>report-aggregate</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report-aggregate</goal>
+            </goals>
+            <configuration>
+              <excludes>
+                <exclude>**/com/trendsellr/Application.class</exclude>
+                <exclude>**/*Config.class</exclude>
+                <exclude>**/config/**</exclude>
+                <exclude>**/*DTO.class</exclude>
+                <exclude>**/dto/**</exclude>
+                <exclude>**/domain/model/**</exclude>
+                <exclude>**/entity/**</exclude>
+                <exclude>**/exception/**</exclude>
+                <exclude>**/infrastructure/input/rest/api/**</exclude>
+                <exclude>**/mapper/**</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

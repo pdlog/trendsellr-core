@@ -15,13 +15,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FindProductByIdUseCase {
 
-    private final ProductRepository productRepository;
+  private final ProductRepository productRepository;
 
-    public Product dispatch(String id) {
-        log.info("Find Product by id '{}'", id);
+  public Product dispatch(String id) {
+    log.info("Find Product by id '{}'", id);
 
-        return this.productRepository.findByProductId(id).orElseThrow(() ->
-                new ProductNotFoundException("Product with id " + id + " not found")
-        );
-    }
+    return this.productRepository.findByProductId(id).orElseThrow(() ->
+        new ProductNotFoundException("Product with id " + id + " not found")
+    );
+  }
 }

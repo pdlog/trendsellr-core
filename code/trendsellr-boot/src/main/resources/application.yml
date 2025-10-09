@@ -7,9 +7,15 @@ logging:
 spring:
   data:
     mongodb:
-      host: trendsellr.ijuvafq.mongodb.net
+      host: localhost
       port: 27017
       database: trendsellr
-      username: ${MONGO_USER}
-      password: ${MONGO_PASSWORD}
-      uri: "mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${spring.data.mongodb.host}/${spring.data.mongodb.database}?retryWrites=true&w=majority"
+      user: admin
+      password: ${local.mongodb.password:password}
+      auth-db-name: admin
+      uri: mongodb://${spring.data.mongodb.user}:${spring.data.mongodb.password}@${spring.data.mongodb.host}:${spring.data.mongodb.port}/${spring.data.mongodb.database}?authSource=${spring.data.mongodb.auth-db-name}
+      read-preference:
+        enabled: true
+        mode: secondaryPreferred
+        max-staleness-seconds: 120
+        enabled-fallback-read: true

@@ -35,8 +35,8 @@ public class MongoProductRepositoryImpl implements ProductRepository {
   @Override
   public Product save(final Product product) {
     log.info("Saving product with id: {}", product.getId());
-    ProductEntity productToSave = this.productRepositoryMapper.toEntity(product);
-    ProductEntity savedEntity = this.springProductRepository.save(productToSave);
+    final ProductEntity productToSave = this.productRepositoryMapper.toEntity(product);
+    final ProductEntity savedEntity = this.springProductRepository.save(productToSave);
 
     return this.productRepositoryMapper.toDomain(savedEntity);
   }
@@ -46,9 +46,9 @@ public class MongoProductRepositoryImpl implements ProductRepository {
     log.info("Updating product with id: {}", productId);
 
     return this.springProductRepository.findByProductId(productId).map(existingProduct -> {
-      ProductEntity productToUpdate = this.productRepositoryMapper.toEntity(updatedProduct);
+      final ProductEntity productToUpdate = this.productRepositoryMapper.toEntity(updatedProduct);
       this.productRepositoryMapper.updateProduct(productToUpdate, existingProduct);
-      ProductEntity updatedEntity = this.springProductRepository.save(existingProduct);
+      final ProductEntity updatedEntity = this.springProductRepository.save(existingProduct);
 
       return this.productRepositoryMapper.toDomain(updatedEntity);
     });
@@ -65,7 +65,7 @@ public class MongoProductRepositoryImpl implements ProductRepository {
   @Override
   public ProductCollection findAll(final Long page, final Integer pageSize) {
     log.info("Finding all products with pagination - page: {}, pageSize: {}", page, pageSize);
-    Pageable pageable = Pageable.ofSize(pageSize).withPage(page.intValue());
+    final Pageable pageable = Pageable.ofSize(pageSize).withPage(page.intValue());
     final Page<ProductEntity> paginatedProducts = this.springProductRepository.findAll(pageable);
     final Pagination pagination = this.paginationRepositoryMapper.toDomain(page, pageSize,
         paginatedProducts.getTotalPages(),
@@ -73,5 +73,11 @@ public class MongoProductRepositoryImpl implements ProductRepository {
 
     return this.productCollectionRepositoryMapper.toDomain(paginatedProducts.getContent(),
         pagination);
+  }
+
+  @Override
+  public void deleteAll() {
+    log.info("Deleting all products");
+    this.springProductRepository.deleteAll();
   }
 }

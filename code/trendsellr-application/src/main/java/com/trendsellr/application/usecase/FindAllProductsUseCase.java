@@ -14,11 +14,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FindAllProductsUseCase {
 
-    private final ProductRepository productRepository;
+  private final ProductRepository productRepository;
 
-    public ProductCollection dispatch(final Long page, final Integer pageSize) {
-        log.info("Find All Products - page: {}, pageSize: {}", page, pageSize);
+  public ProductCollection dispatch(final Long page, final Integer pageSize) {
+    log.info("Find All Products - page: {}, pageSize: {}", page, pageSize);
 
-        return this.productRepository.findAll(page, pageSize);
-    }
+    return this.productRepository.findAll(page, pageSize);
+  }
 }

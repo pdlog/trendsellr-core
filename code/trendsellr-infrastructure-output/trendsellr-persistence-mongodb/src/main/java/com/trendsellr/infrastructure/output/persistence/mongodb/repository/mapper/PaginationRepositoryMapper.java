@@ -7,5 +7,6 @@ import org.mapstruct.Mapper;
 @Mapper(config = RepositoryMapperConfig.class)
 public interface PaginationRepositoryMapper {
 
-    Pagination toDomain(final Long page, final Integer pageSize, final Integer totalPages, final Long totalElements);
+  Pagination toDomain(final Long page, final Integer pageSize, final Integer totalPages,
+      final Long totalElements);
 }

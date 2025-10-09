@@ -8,5 +8,5 @@ import org.mapstruct.Mapper;
 @Mapper(config = CommonMapperConfig.class, uses = {ProductDTOMapper.class})
 public interface ProductCollectionDTOMapper {
 
-    ProductCollectionDTO toDto(ProductCollection productCollection);
+  ProductCollectionDTO toDto(ProductCollection productCollection);
 }

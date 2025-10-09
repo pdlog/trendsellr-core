@@ -1,9 +1,8 @@
 package com.trendsellr.domain.model;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.List;
 
 /**
  * Represents a collection of products along with pagination details.
@@ -13,7 +12,7 @@ import java.util.List;
 @Builder
 public class ProductCollection {
 
-    private List<Product> products;
+  private List<Product> products;
 
-    private Pagination pagination;
+  private Pagination pagination;
 }

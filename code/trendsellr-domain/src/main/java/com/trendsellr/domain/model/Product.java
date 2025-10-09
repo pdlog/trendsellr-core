@@ -11,9 +11,9 @@ import lombok.Data;
 @Builder
 public class Product {
 
-    private String id;
-    private String name;
-    private String url;
-    private String source;
-    private Metadata metadata;
+  private String id;
+  private String name;
+  private String url;
+  private String source;
+  private Metadata metadata;
 }

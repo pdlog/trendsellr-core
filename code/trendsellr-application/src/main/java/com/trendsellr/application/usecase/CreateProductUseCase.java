@@ -29,6 +29,6 @@ public class CreateProductUseCase {
     final Metadata metadata = Metadata.builder().version(1).build();
     product.setMetadata(metadata);
 
-    return productRepository.save(product);
+    return this.productRepository.save(product);
   }
 }

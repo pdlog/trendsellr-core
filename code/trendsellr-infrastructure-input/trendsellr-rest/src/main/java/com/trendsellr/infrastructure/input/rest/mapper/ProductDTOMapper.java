@@ -12,33 +12,33 @@ import org.mapstruct.Mapping;
 @Mapper(config = CommonMapperConfig.class, uses = {UriMapper.class})
 public interface ProductDTOMapper {
 
-    /**
-     * Converts a Product domain model to a ProductDTO.
-     *
-     * @param product The domain model.
-     * @return The DTO.
-     */
-    ProductDTO toDto(Product product);
+  /**
+   * Converts a Product domain model to a ProductDTO.
+   *
+   * @param product The domain model.
+   * @return The DTO.
+   */
+  ProductDTO toDto(Product product);
 
-    /**
-     * Converts a ProductCreateDTO to a Product domain model.
-     *
-     * @param productCreateDto The DTO.
-     * @return The domain model.
-     */
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "metadata", ignore = true)
-    Product toDomain(ProductCreateDTO productCreateDto);
+  /**
+   * Converts a ProductCreateDTO to a Product domain model.
+   *
+   * @param productCreateDto The DTO.
+   * @return The domain model.
+   */
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "metadata", ignore = true)
+  Product toDomain(ProductCreateDTO productCreateDto);
 
-    /**
-     * Converts a ProductUpdateDTO to a Product domain model.
-     *
-     * @param productUpdateDto The DTO.
-     * @return The domain model.
-     */
+  /**
+   * Converts a ProductUpdateDTO to a Product domain model.
+   *
+   * @param productUpdateDto The DTO.
+   * @return The domain model.
+   */
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "source", ignore = true)
-    @Mapping(target = "metadata", ignore = true)
-    Product toDomain(ProductUpdateDTO productUpdateDto);
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "source", ignore = true)
+  @Mapping(target = "metadata", ignore = true)
+  Product toDomain(ProductUpdateDTO productUpdateDto);
 }
