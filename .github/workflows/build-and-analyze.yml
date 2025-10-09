@@ -36,3 +36,4 @@ jobs:
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           coverage-reports: code/trendsellr-reports/target/site/jacoco-aggregate/jacoco.xml
+          path-prefix: code
