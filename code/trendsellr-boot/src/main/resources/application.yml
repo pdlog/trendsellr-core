@@ -1,4 +1,21 @@
+logging:
+  level:
+    com.trendsellr: DEBUG
+    org.springframework: ERROR
+  pattern:
+    console: "%d{HH:mm:ss.SSS} %highlight(%-5level) --- [%15.15t] [%C{0}] %msg%n"
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://tu_usuario:tu_contraseña@tu_cluster.mongodb.net/trendsellr?retryWrites=true&w=majority
+      host: localhost
+      port: 27017
+      database: trendsellr
+      user: admin
+      password: ${local.mongodb.password:password}
+      auth-db-name: admin
+      uri: mongodb://${spring.data.mongodb.user}:${spring.data.mongodb.password}@${spring.data.mongodb.host}:${spring.data.mongodb.port}/${spring.data.mongodb.database}?authSource=${spring.data.mongodb.auth-db-name}
+      read-preference:
+        enabled: true
+        mode: secondaryPreferred
+        max-staleness-seconds: 120
+        enabled-fallback-read: true

@@ -1,0 +1,18 @@
+exclude_paths:
+  - "**/*.md"
+  - "**.xml"
+  - ".github/**"
+  - ".idea/**"
+  - ".vscode/**"
+
+coverage:
+  exclude_paths:
+    - "**/com/trendsellr/Application.java"
+    - "**/*Config.class"
+    - "**/config/**"
+    - "**/*DTO.java"
+    - "**/dto/**"
+    - "**/domain/model/**"
+    - "**/entity/**"
+    - "**/exception/**"
+    - "**/mapper/**"

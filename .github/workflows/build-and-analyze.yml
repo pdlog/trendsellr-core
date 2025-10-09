@@ -1,0 +1,45 @@
+name: Build, Test and Analyze with Codacy
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build-and-analyze:
+    name: Build, Test & Analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Build and run tests with JaCoCo
+        run: mvn -f code/pom.xml -B verify
+
+      - name: Download Codacy Reporter
+        run: |
+          curl -Ls https://github.com/codacy/codacy-coverage-reporter/releases/latest/download/codacy-coverage-reporter-linux > codacy-reporter
+          chmod +x codacy-reporter
+
+      - name: Run Codacy Reporter
+        run: |
+          ./codacy-reporter report -l Java -r code/trendsellr-reports/target/site/jacoco-aggregate/jacoco.xml
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
