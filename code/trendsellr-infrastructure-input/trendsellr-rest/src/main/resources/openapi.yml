@@ -1,0 +1,469 @@
+openapi: 3.0.3
+info:
+  title: TrendSellr Public API
+  description: API for tracking viral products and price trends.
+  version: 1.0.0
+
+tags:
+  - name: Products
+    description: Operations related to products
+  - name: Health
+    description: Service health check
+
+paths:
+  /api/public/v1/products:
+    get:
+      summary: Get all tracked products
+      operationId: getAllProducts
+      tags:
+        - Products
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/pageSize'
+      responses:
+        '200':
+          description: A list of products.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCollection'
+              examples:
+                ProductCollectionExample:
+                  $ref: '#/components/examples/ProductCollectionExample'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      summary: Add a new product to track
+      operationId: createProduct
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreateRequest'
+            examples:
+              ProductCreateRequestExample:
+                $ref: '#/components/examples/ProductCreateRequestExample'
+      responses:
+        '201':
+          description: Product created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductId'
+              examples:
+                ProductIdExample:
+                  $ref: '#/components/examples/ProductIdExample'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/public/v1/products/{id}:
+    get:
+      summary: Get a product by its ID
+      operationId: getProductById
+      tags:
+        - Products
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: The requested product.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+              examples:
+                ProductResponseExample:
+                  $ref: '#/components/examples/ProductResponseExample'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      summary: Update an existing product by its ID
+      operationId: updateProduct
+      tags:
+        - Products
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductUpdateRequest'
+      responses:
+        '204':
+          description: Product updated successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/public/v1/health:
+    get:
+      summary: Check the health status of the service
+      operationId: checkHealth
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Service is up and running.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: UP
+components:
+  parameters:
+    id:
+      name: id
+      in: path
+      description: Unique identifier for the dto
+      required: true
+      schema:
+        type: string
+      example: "123e4567-e89b-12d3-a456-426614174000"
+    page:
+      name: page
+      in: query
+      description: Current page number (0-indexed)
+      required: false
+      schema:
+        $ref: '#/components/schemas/Page'
+      example: 0
+    pageSize:
+      name: pageSize
+      in: query
+      description: Number of items per page
+      required: false
+      schema:
+        $ref: '#/components/schemas/PageSize'
+      example: 10
+  schemas:
+    Error:
+      title: Error
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - status
+        - title
+        - message
+        - timestamp
+      properties:
+        type:
+          type: string
+          maxLength: 250
+          description: A error type unique identifier of the problem
+          example: PRODUCT.SOURCE_NOT_VALID
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code of the error
+          minimum: 400
+          maximum: 599
+          example: 404
+        title:
+          type: string
+          maxLength: 1000
+          description: The title with a summary of the problem
+          example: "The product source provided is not valid."
+        message:
+          type: string
+          maxLength: 9999
+          description: The message with details about the problem
+          example: "The source 'UnknownStore' is not recognized. Please provide a valid source."
+        timestamp:
+          type: string
+          format: date-time
+          description: The date and time when the error occurred
+          example: "2023-10-01T12:00:00Z"
+        additionalData:
+          type: object
+          additionalProperties: true
+          description: Additional data related to the error
+          example: { "invalidSource": "UnknownStore" }
+      example:
+        type: PRODUCT.SOURCE_NOT_VALID
+        status: 400
+        title: Invalid Product Source
+        message: "The source 'UnknownStore' is not recognized. Please provide a valid source."
+        timestamp: "2023-10-01T12:00:00Z"
+        additionalData:
+          invalidSource: "UnknownStore"
+    Page:
+      type: integer
+      format: int64
+      description: Current page number (0-indexed)
+      minimum: 0
+      maximum: 100000
+      default: 0
+      example: 0
+    PageSize:
+      title: PageSize
+      type: integer
+      format: int32
+      minimum: 0
+      maximum: 1000
+      default: 100
+      description: Number of items per page
+      example: 10
+    Pagination:
+      title: Pagination
+      description: Pagination details for paginated responses
+      type: object
+      additionalProperties: false
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+          description: Total number of items available
+          minimum: 0
+          example: 100
+        totalPages:
+          type: integer
+          format: int32
+          minimum: 0
+          description: Total number of pages available
+          example: 10
+        page:
+          $ref: '#/components/schemas/Page'
+        pageSize:
+          $ref: '#/components/schemas/PageSize'
+    Product:
+      title: Product
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the product
+          readOnly: true
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        name:
+          type: string
+          description: Name of the product
+          maxLength: 200
+          example: "Wireless Earbuds"
+        url:
+          type: string
+          description: URL of the product page
+          format: uri
+          example: "https://www.example.com/product/wireless-earbuds"
+        source:
+          type: string
+          description: Source website of the product
+          maxLength: 50
+          example: "ExampleStore"
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+    ProductResponse:
+      title: ProductResponse
+      type: object
+      additionalProperties: false
+      required:
+        - product
+      properties:
+        product:
+          $ref: '#/components/schemas/Product'
+    ProductId:
+      title: ProductId
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the product
+          example: "123e4567-e89b-12d3-a456-426614174000"
+    ProductCreate:
+      title: ProductCreate
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - url
+        - source
+      properties:
+        name:
+          type: string
+          description: Name of the product
+          maxLength: 200
+          example: "Wireless Earbuds"
+        url:
+          type: string
+          description: URL of the product page
+          format: uri
+          example: "https://www.example.com/product/wireless-earbuds"
+        source:
+          type: string
+          description: Source website of the product
+          maxLength: 50
+          example: "ExampleStore"
+    ProductCreateRequest:
+      title: ProductCreateRequest
+      type: object
+      additionalProperties: false
+      required:
+        - product
+      properties:
+        product:
+          $ref: '#/components/schemas/ProductCreate'
+    ProductUpdate:
+      title: ProductUpdate
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          description: Name of the product
+          maxLength: 200
+          example: "Wireless Earbuds"
+        url:
+          type: string
+          description: URL of the product page
+          format: uri
+          example: "https://www.example.com/product/wireless-earbuds"
+    ProductUpdateRequest:
+      title: ProductUpdateRequest
+      type: object
+      additionalProperties: false
+      required:
+        - product
+      properties:
+        product:
+          $ref: '#/components/schemas/ProductUpdate'
+    ProductCollection:
+      title: ProductCollection
+      type: object
+      properties:
+        products:
+          type: array
+          maxItems: 999
+          items:
+            $ref: '#/components/schemas/Product'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    Metadata:
+      title: Metadata
+      type: object
+      additionalProperties: false
+      properties:
+        creationDateTime:
+          type: string
+          format: date-time
+          description: The date and time when the dto was created
+          example: "2023-10-01T12:00:00Z"
+        lastUpdatedDateTime:
+          type: string
+          format: date-time
+          description: The date and time when the dto was last updated
+          example: "2023-10-05T15:30:00Z"
+        version:
+          type: integer
+          description: Version number of the dto record
+          example: 1
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  examples:
+    ProductCollectionExample:
+      summary: Example of a paginated product collection
+      value:
+        products:
+          - id: "123e4567-e89b-12d3-a456-426614174000"
+            name: "Nintendo Switch OLED"
+            url: "https://www.example.com/product/switch"
+            source: "Amazon"
+            metadata:
+              creationDateTime: "2023-10-01T12:00:00Z"
+              lastUpdatedDateTime: "2023-10-05T15:30:00Z"
+              version: 2
+          - id: "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"
+            name: "Wireless Earbuds"
+            url: "https://www.example.com/product/earbuds"
+            source: "AliExpress"
+            metadata:
+              creationDateTime: "2023-09-28T10:00:00Z"
+              lastUpdatedDateTime: "2023-10-04T11:20:00Z"
+              version: 1
+        pagination:
+          totalElements: 2
+          totalPages: 1
+          page: 0
+          pageSize: 10
+    ProductCreateRequestExample:
+      summary: Example for creating a new product
+      value:
+        product:
+          name: "New Smartwatch"
+          url: "https://www.example.com/product/smartwatch"
+          source: "PCComponentes"
+    ProductIdExample:
+      summary: Example of a created product ID response
+      value:
+        id: "fedcba98-7654-3210-fedc-ba9876543210"
+    ProductResponseExample:
+      summary: Example of a single product response
+      value:
+        product:
+          id: "123e4567-e89b-12d3-a456-426614174000"
+          name: "Nintendo Switch OLED"
+          url: "https://www.example.com/product/switch"
+          source: "Amazon"
+          metadata:
+            creationDateTime: "2023-10-01T12:00:00Z"
+            lastUpdatedDateTime: "2023-10-05T15:30:00Z"
+            version: 2
