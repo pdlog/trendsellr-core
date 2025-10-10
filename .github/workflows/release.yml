@@ -65,6 +65,11 @@ jobs:
     needs: create_release
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Develop Branch
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: develop
       - name: Create PR for Synchronisation to Develop
         uses: peter-evans/create-pull-request@v6
         with:
