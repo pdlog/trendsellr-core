@@ -47,11 +47,6 @@ jobs:
 
           echo "::set-output name=new_tag::v$NEW_VERSION"
           echo "::set-output name=increment_type::$INCREMENT_TYPE"
-          
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git commit --allow-empty -m "chore(release): Publishing version $NEW_VERSION"
-          git push origin main
 
       - name: Create Tag and Release on GitHub
         uses: softprops/action-gh-release@v2
