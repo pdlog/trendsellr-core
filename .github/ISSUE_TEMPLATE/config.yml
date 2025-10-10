@@ -1,0 +1,16 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Ask the Community
+    url: https://github.com/pdlog/trendsellr-core/discussions
+    about: Please ask us about how to use the project in the Discussions tab (if you have one enabled).
+
+issue_templates:
+  - name: New Feature / User Story
+    description: Propose a new feature for the project.
+    link: ./feature.md
+  - name: Bug Report
+    description: Report a bug or unexpected behavior.
+    link: ./bug.md
+  - name: Technical Improvement / Refactoring
+    description: Tasks to improve the internal quality of the code.
+    link: ./refactor.md
