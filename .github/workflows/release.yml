@@ -65,6 +65,36 @@ jobs:
     needs: create_release
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Develop Branch
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: develop
+      - name: Tool installation
+        run: |
+          sudo apt-get update && sudo apt-get install -y maven jq
+      - name: Synchronise Main and Increase SNAPSHOT Version
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git pull origin main --no-edit 
+          
+          CURRENT_VERSION=$(git describe --tags --abbrev=0 | sed 's/^v//')
+          
+          VERSION_PARTS=$(echo $CURRENT_VERSION | tr "." "\n")
+          MAJOR=$(echo $VERSION_PARTS | awk '{print $1}')
+          MINOR=$(echo $VERSION_PARTS | awk '{print $2}')
+          
+          NEXT_MINOR=$((MINOR + 1))
+          
+          NEXT_SNAPSHOT_VERSION="$MAJOR.$NEXT_MINOR.0-SNAPSHOT"
+          
+          echo "Preparing SNAPSHOT: $NEXT_SNAPSHOT_VERSION"
+          
+          mvn versions:set -DnewVersion=$NEXT_SNAPSHOT_VERSION -DgenerateBackupPoms=false
+
+          git commit -a -m "chore(snapshot): Preparing version $NEXT_SNAPSHOT_VERSION for the next development cycle"
       - name: Create PR for Synchronisation to Develop
         uses: peter-evans/create-pull-request@v6
         with:
@@ -73,8 +103,4 @@ jobs:
           branch: sync/main-to-develop
           base: develop
           title: 'SYNC: Synchronisation of main post-release ${{ github.sha }}'
-          body: |
-            This automatic PR synchronises the `main` branch (which has just received a release) with `develop`.
-            
-            **It should be merged as soon as possible** to prepare `develop` for the next cycle.
           labels: automated-sync
