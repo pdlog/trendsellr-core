@@ -1,0 +1,17 @@
+server:
+  port: 8080
+logging:
+  level:
+    com.trendsellr: INFO
+    org.springframework: ERROR
+spring:
+  data:
+    mongodb:
+      host: ${MONGO_URL}
+      database: ${MONGO_USER}
+      password: ${MONGO_PASSWORD}
+      uri: mongodb+srv://${spring.data.mongodb.user}:${spring.data.mongodb.password}@${spring.data.mongodb.host}/?retryWrites=true&w=majority&appName={spring.data.mongodb.database}
+
+app:
+  cors:
+    allowed-origins: "https://app.trendsellr.com"
