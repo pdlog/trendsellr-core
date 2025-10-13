@@ -4,3 +4,9 @@ logging:
     org.springframework: ERROR
   pattern:
     console: "%d{HH:mm:ss.SSS} %highlight(%-5level) --- [%15.15t] [%C{0}] %msg%n"
+api:
+  security:
+    api-key: "${API_KEY:default_api_key}"
+app:
+  cors:
+    allowed-origins: "*"
