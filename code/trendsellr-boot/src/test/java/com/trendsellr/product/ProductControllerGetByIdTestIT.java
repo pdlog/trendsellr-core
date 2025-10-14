@@ -2,11 +2,17 @@ package com.trendsellr.product;
 
 import com.trendsellr.domain.exception.error.ProductDefaultError;
 import com.trendsellr.domain.exception.error.SecurityDefaultError;
-import lombok.RequiredArgsConstructor;
+import com.trendsellr.domain.model.product.Product;
+import com.trendsellr.domain.repository.ProductRepository;
+import com.trendsellr.domain.repository.UserRepository;
+import com.trendsellr.domain.service.JwtService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.UUID;
 
@@ -15,12 +21,31 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
 class ProductControllerGetByIdTestIT extends BaseProductControllerTestIT {
 
     private static final String GET_PRODUCT_BY_ID_URL = "/api/public/v1/products/{id}";
 
-    private final MockMvc secureMockMvc;
+    private Product existingProduct;
+
+    protected ProductControllerGetByIdTestIT(@Autowired final ProductRepository productRepository, @Autowired final UserRepository userRepository,
+                                             @Autowired final PasswordEncoder passwordEncoder, @Autowired final JwtService jwtService, @Autowired final WebApplicationContext context,
+                                             @Value("${api.security.api-key}") final String testApiKey) {
+        super(productRepository, userRepository, passwordEncoder, jwtService, context, testApiKey);
+    }
+
+    @BeforeEach
+    @Override
+    void setUp() {
+        super.setUp();
+        this.existingProduct = this.productRepository.save(
+                Product.builder()
+                        .id(UUID.randomUUID().toString())
+                        .name("Default Test Product")
+                        .source("DefaultSource")
+                        .url("http://default.test.com")
+                        .build()
+        );
+    }
 
     @Test
     @DisplayName("Given an existing product ID, when GET /products/{id} is called, then should return 200 OK with product data")

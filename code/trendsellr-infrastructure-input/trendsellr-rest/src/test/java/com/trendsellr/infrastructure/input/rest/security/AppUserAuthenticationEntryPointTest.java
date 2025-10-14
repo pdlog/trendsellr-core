@@ -18,32 +18,32 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class AppAuthenticationEntryPointTest {
+class AppUserAuthenticationEntryPointTest {
 
     @Mock
     private SecurityErrorResponseWriter responseWriter;
 
     @InjectMocks
-    private AppAuthenticationEntryPoint appAuthenticationEntryPoint;
+    private AppUserAuthenticationEntryPoint appUserAuthenticationEntryPoint;
 
     @Test
-    @DisplayName("When commence is called, then it should delegate to SecurityErrorResponseWriter")
+    @DisplayName("Given an authentication failure, when commence is called, then should delegate to SecurityErrorResponseWriter")
     void givenAuthenticationFailure_whenCommence_thenShouldDelegateToResponseWriter() throws IOException {
         // Given
         final HttpServletRequest request = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final AuthenticationException authException = mock(AuthenticationException.class);
 
-        final String expectedMessage = "A valid API Key is required to access this resource.";
+        final String expectedMessage = "A valid user authentication token (JWT) is required for this resource.";
 
         // When
-        this.appAuthenticationEntryPoint.commence(request, response, authException);
+        this.appUserAuthenticationEntryPoint.commence(request, response, authException);
 
         // Then
         verify(this.responseWriter).writeErrorResponse(
                 response,
-                HttpStatus.FORBIDDEN,
-                SecurityDefaultError.ACCESS_DENIED,
+                HttpStatus.UNAUTHORIZED,
+                SecurityDefaultError.INVALID_CREDENTIALS,
                 expectedMessage
         );
     }

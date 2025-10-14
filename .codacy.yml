@@ -4,6 +4,7 @@ exclude_paths:
   - ".github/**"
   - ".idea/**"
   - ".vscode/**"
+  - "**/src/test/**"
 
 coverage:
   exclude_paths:

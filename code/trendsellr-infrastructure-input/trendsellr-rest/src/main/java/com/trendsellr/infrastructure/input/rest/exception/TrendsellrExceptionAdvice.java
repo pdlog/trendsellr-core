@@ -1,7 +1,9 @@
 package com.trendsellr.infrastructure.input.rest.exception;
 
 import com.trendsellr.domain.exception.GenericException;
+import com.trendsellr.domain.exception.InvalidCredentialsException;
 import com.trendsellr.domain.exception.ProductNotFoundException;
+import com.trendsellr.domain.exception.UserAlreadyExistsException;
 import com.trendsellr.infrastructure.input.rest.dto.ErrorDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -36,6 +38,22 @@ public class TrendsellrExceptionAdvice {
                 ex.getMessage());
 
         return new ResponseEntity<>(error, HttpStatus.valueOf(error.getStatus()));
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ErrorDTO> handleUserAlreadyExistsException(final UserAlreadyExistsException ex) {
+        log.error("Conflict: {}", ex.getMessage());
+        final ErrorDTO error = this.createErrorDto(ex.getType(), HttpStatus.CONFLICT, ex.getTitle(), ex.getMessage());
+
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ErrorDTO> handleInvalidCredentialsException(final InvalidCredentialsException ex) {
+        log.error("Authentication failed: {}", ex.getMessage());
+        final ErrorDTO error = this.createErrorDto(ex.getType(), HttpStatus.UNAUTHORIZED, ex.getTitle(), ex.getMessage());
+
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

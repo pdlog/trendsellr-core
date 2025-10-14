@@ -1,19 +1,19 @@
 package com.trendsellr.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.trendsellr.BaseTestIT;
 import com.trendsellr.domain.exception.error.SecurityDefaultError;
 import com.trendsellr.domain.repository.ProductRepository;
+import com.trendsellr.domain.repository.UserRepository;
+import com.trendsellr.domain.service.JwtService;
 import com.trendsellr.infrastructure.input.rest.dto.ProductCreateDTO;
 import com.trendsellr.infrastructure.input.rest.dto.ProductCreateRequestDTO;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.net.URI;
@@ -22,32 +22,27 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
-class ProductControllerCreateProductTestIT extends BaseTestIT {
+class ProductControllerCreateProductTestIT extends BaseProductControllerTestIT {
 
     private static final String POST_CREATE_PRODUCT = "/api/public/v1/products";
 
-    private final WebApplicationContext context;
+    private ObjectMapper objectMapper;
 
-    private MockMvc insecureMockMvc;
-
-    private final MockMvc secureMockMvc;
-
-    private final ProductRepository productRepository;
-
-    private final ObjectMapper objectMapper;
+    public ProductControllerCreateProductTestIT(@Autowired final ProductRepository productRepository, @Autowired final UserRepository userRepository,
+                                                @Autowired final PasswordEncoder passwordEncoder, @Autowired final JwtService jwtService, @Autowired final WebApplicationContext context,
+                                                @Value("${api.security.api-key}") final String testApiKey) {
+        super(productRepository, userRepository, passwordEncoder, jwtService, context, testApiKey);
+    }
 
     @BeforeEach
+    @Override
     void setUp() {
-        this.insecureMockMvc = MockMvcBuilders
-                .webAppContextSetup(this.context)
-                .apply(springSecurity())
-                .build();
+        super.setUp();
+        this.objectMapper = new ObjectMapper();
     }
 
     @Test

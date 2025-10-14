@@ -7,7 +7,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum SecurityDefaultError implements DefaultGenericError {
 
-    ACCESS_DENIED("SECURITY.ACCESS_DENIED", "Access Denied", "You do not have permission to access this resource.");
+    ACCESS_DENIED("SECURITY.ACCESS_DENIED", "Access Denied", "You do not have permission to access this resource."),
+
+    INVALID_CREDENTIALS("SECURITY.INVALID_CREDENTIALS", "Invalid Credentials", "The email or password provided is incorrect.");
+
 
     private final String type;
 

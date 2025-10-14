@@ -1,12 +1,16 @@
 logging:
   level:
     com.trendsellr: DEBUG
-    org.springframework: ERROR
+    org.springframework: INFO
   pattern:
     console: "%d{HH:mm:ss.SSS} %highlight(%-5level) --- [%15.15t] [%C{0}] %msg%n"
 api:
   security:
-    api-key: "${API_KEY:default_api_key}"
+    api-key: "test-api-key"
+    jwt:
+      secret: "a-very-long-and-secure-secret-key-for-testing-purposes-only"
+      expiration-time: 86400000
+    public-paths: /api/public/v1/health,/api/public/v1/auth/**
 app:
   cors:
     allowed-origins: "*"

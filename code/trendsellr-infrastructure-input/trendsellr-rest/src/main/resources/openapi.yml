@@ -9,8 +9,95 @@ tags:
     description: Operations related to products
   - name: Health
     description: Service health check
+  - name: Authentication
+    description: Operations related to user authentication
 
 paths:
+  /api/public/v1/health:
+    get:
+      summary: Check the health status of the service
+      operationId: checkHealth
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Service is up and running.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: UP
+  /api/public/v1/auth/register:
+    post:
+      summary: Register a new user
+      operationId: registerUser
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegisterRequest'
+            examples:
+              UserRegisterRequestExample:
+                $ref: '#/components/examples/UserRegisterRequestExample'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+              examples:
+                UserResponseExample:
+                  $ref: '#/components/examples/UserResponseExample'
+        '409':
+          description: User with this email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                UserAlreadyExistsErrorExample:
+                  $ref: '#/components/examples/UserAlreadyExistsErrorExample'
+  /api/public/v1/auth/login:
+    post:
+      summary: Authenticate a user and get a token
+      operationId: loginUser
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              LoginRequestExample:
+                $ref: '#/components/examples/LoginRequestExample'
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+              examples:
+                AuthResponseExample:
+                  $ref: '#/components/examples/AuthResponseExample'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                UnauthorizedErrorExample:
+                  $ref: '#/components/examples/UnauthorizedErrorExample'
   /api/public/v1/products:
     get:
       summary: Get all tracked products
@@ -121,23 +208,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /api/public/v1/health:
-    get:
-      summary: Check the health status of the service
-      operationId: checkHealth
-      tags:
-        - Health
-      responses:
-        '200':
-          description: Service is up and running.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: UP
 components:
   parameters:
     id:
@@ -165,6 +235,13 @@ components:
         $ref: '#/components/schemas/PageSize'
       example: 10
   schemas:
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: The JWT token for authentication.
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     Error:
       title: Error
       type: object
@@ -216,6 +293,39 @@ components:
         timestamp: "2023-10-01T12:00:00Z"
         additionalData:
           invalidSource: "UnknownStore"
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        password:
+          type: string
+          format: password
+          example: "Str0ngP@ssw0rd!"
+    Metadata:
+      title: Metadata
+      type: object
+      additionalProperties: false
+      properties:
+        creationDateTime:
+          type: string
+          format: date-time
+          description: The date and time when the dto was created
+          example: "2023-10-01T12:00:00Z"
+        lastUpdatedDateTime:
+          type: string
+          format: date-time
+          description: The date and time when the dto was last updated
+          example: "2023-10-05T15:30:00Z"
+        version:
+          type: integer
+          description: Version number of the dto record
+          example: 1
     Page:
       type: integer
       format: int64
@@ -368,25 +478,43 @@ components:
             $ref: '#/components/schemas/Product'
         pagination:
           $ref: '#/components/schemas/Pagination'
-    Metadata:
-      title: Metadata
+    UserRegisterRequest:
       type: object
-      additionalProperties: false
+      required:
+        - email
+        - username
+        - password
       properties:
-        creationDateTime:
+        email:
           type: string
-          format: date-time
-          description: The date and time when the dto was created
-          example: "2023-10-01T12:00:00Z"
-        lastUpdatedDateTime:
+          format: email
+          example: "user@example.com"
+        username:
           type: string
-          format: date-time
-          description: The date and time when the dto was last updated
-          example: "2023-10-05T15:30:00Z"
-        version:
-          type: integer
-          description: Version number of the dto record
-          example: 1
+          example: "newuser"
+        password:
+          type: string
+          format: password
+          example: "Str0ngP@ssw0rd!"
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "uuid-del-usuario"
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        username:
+          type: string
+          example: "newuser"
+        roles:
+          type: array
+          items:
+            type: string
+          example:
+            - "USER"
   responses:
     BadRequest:
       description: Bad Request
@@ -467,3 +595,42 @@ components:
             creationDateTime: "2023-10-01T12:00:00Z"
             lastUpdatedDateTime: "2023-10-05T15:30:00Z"
             version: 2
+    UserRegisterRequestExample:
+      summary: Example for registering a new user
+      value:
+        email: "pedro.daniel@example.com"
+        username: "pdlog"
+        password: "aVeryStrongPassword123!"
+    UserResponseExample:
+      summary: Example of a user response after registration
+      value:
+        id: "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"
+        email: "pedro.daniel@example.com"
+        username: "pdlog"
+        roles:
+          - "USER"
+    LoginRequestExample:
+      summary: Example for user login
+      value:
+        email: "pedro.daniel@example.com"
+        password: "aVeryStrongPassword123!"
+    AuthResponseExample:
+      summary: Example of a successful authentication response
+      value:
+        token: "a-sample-jwt-token-string.goes.here"
+    UserAlreadyExistsErrorExample:
+      summary: Example of a 409 Conflict error for existing user
+      value:
+        type: "USER.ALREADY_EXISTS"
+        status: 409
+        title: "User Already Exists"
+        message: "A user with the provided email already exists."
+        timestamp: "2023-10-01T12:00:00Z"
+    UnauthorizedErrorExample:
+      summary: Example of a 401 Unauthorized error for invalid credentials
+      value:
+        type: "https://example.com/probs/unauthorized"
+        status: 401
+        title: "Unauthorized"
+        message: "The provided credentials are not valid."
+        timestamp: "2023-10-01T12:00:00Z"
