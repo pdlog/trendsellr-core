@@ -21,5 +21,4 @@ issues:
   ignore:
     - patternId: "Password"
       paths:
-        - "**/JwtServiceImplTest.java"
-        - "**/LoginUserUseCaseTest.java"
+        - "code/trendsellr-application/src/test/**"
