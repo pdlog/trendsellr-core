@@ -83,7 +83,7 @@ class LoginUserUseCaseTest {
         final User foundUser = User.builder().email(email).password(HASHED_PASSWORD).build();
 
         when(this.userRepository.findByEmail(email)).thenReturn(Optional.of(foundUser));
-        when(this.passwordEncoder.matches(RAW_PASSWORD, HASHED_PASSWORD)).thenReturn(false);
+        when(this.passwordEncoder.matches(WRONG_PASSWORD, HASHED_PASSWORD)).thenReturn(false);
 
         // When & Then
         assertThrows(InvalidCredentialsException.class, () -> this.loginUserUseCase.dispatch(email, WRONG_PASSWORD));

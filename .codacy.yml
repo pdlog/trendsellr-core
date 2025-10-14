@@ -16,3 +16,10 @@ coverage:
     - "**/entity/**"
     - "**/exception/**"
     - "**/mapper/**"
+
+issues:
+  ignore:
+    - patternId: "Password"
+      paths:
+        - "**/JwtServiceImplTest.java"
+        - "**/LoginUserUseCaseTest.java"

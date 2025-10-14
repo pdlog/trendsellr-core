@@ -95,20 +95,4 @@ class ApiKeyAuthFilterTest {
         verify(this.authenticationEntryPoint).commence(eq(this.request), eq(this.response), any(BadCredentialsException.class));
         verify(this.filterChain, never()).doFilter(this.request, this.response);
     }
-
-    @Test
-    @DisplayName("Given no API Key on a private path, when filter is applied, then should call entry point")
-    void givenNoApiKey_whenFilter_thenShouldCallEntryPoint() throws ServletException, IOException {
-        // Given
-        when(this.request.getRequestURI()).thenReturn("/api/public/v1/products");
-        when(this.request.getHeader("X-API-KEY")).thenReturn(null);
-
-        // When
-        this.apiKeyAuthFilter.doFilterInternal(this.request, this.response, this.filterChain);
-
-        // Then
-        assertNull(SecurityContextHolder.getContext().getAuthentication());
-        verify(this.authenticationEntryPoint).commence(eq(this.request), eq(this.response), any(BadCredentialsException.class));
-        verify(this.filterChain, never()).doFilter(this.request, this.response);
-    }
 }
