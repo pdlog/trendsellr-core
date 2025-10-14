@@ -15,7 +15,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AppAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class AppUserAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private final SecurityErrorResponseWriter responseWriter;
 
@@ -25,9 +25,9 @@ public class AppAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         this.responseWriter.writeErrorResponse(
                 response,
-                HttpStatus.FORBIDDEN,
-                SecurityDefaultError.ACCESS_DENIED,
-                "A valid API Key is required to access this resource."
+                HttpStatus.UNAUTHORIZED,
+                SecurityDefaultError.INVALID_CREDENTIALS,
+                "A valid user authentication token (JWT) is required for this resource."
         );
     }
 }

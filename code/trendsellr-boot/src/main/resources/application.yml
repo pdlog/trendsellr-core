@@ -12,3 +12,7 @@ spring:
 api:
   security:
     api-key: "${API_KEY:default_api_key}"
+    jwt:
+      secret: "${JWT_SECRET}"
+      expiration-time: 86400000
+    public-paths: /api/public/v1/health,/api/public/v1/auth/**

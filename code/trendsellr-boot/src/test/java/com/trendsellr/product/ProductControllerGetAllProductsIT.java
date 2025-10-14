@@ -1,16 +1,15 @@
 package com.trendsellr.product;
 
-import com.trendsellr.BaseTestIT;
 import com.trendsellr.domain.exception.error.SecurityDefaultError;
-import com.trendsellr.domain.model.Product;
+import com.trendsellr.domain.model.product.Product;
 import com.trendsellr.domain.repository.ProductRepository;
-import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
+import com.trendsellr.domain.repository.UserRepository;
+import com.trendsellr.domain.service.JwtService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.UUID;
@@ -18,30 +17,18 @@ import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
-class ProductControllerGetAllProductsIT extends BaseTestIT {
+class ProductControllerGetAllProductsIT extends BaseProductControllerTestIT {
 
     private static final String GET_ALL_PRODUCTS_URL = "/api/public/v1/products";
 
-    private final WebApplicationContext context;
-
-    private MockMvc insecureMockMvc;
-
-    private final MockMvc secureMockMvc;
-
-    private final ProductRepository productRepository;
-
-    @BeforeEach
-    void setUp() {
-        this.insecureMockMvc = MockMvcBuilders
-                .webAppContextSetup(this.context)
-                .apply(springSecurity())
-                .build();
+    protected ProductControllerGetAllProductsIT(@Autowired final ProductRepository productRepository, @Autowired final UserRepository userRepository,
+                                                @Autowired final PasswordEncoder passwordEncoder, @Autowired final JwtService jwtService, @Autowired final WebApplicationContext context,
+                                                @Value("${api.security.api-key}") final String testApiKey) {
+        super(productRepository, userRepository, passwordEncoder, jwtService, context, testApiKey);
     }
 
     @Test
