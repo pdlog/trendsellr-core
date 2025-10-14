@@ -16,9 +16,4 @@ coverage:
     - "**/entity/**"
     - "**/exception/**"
     - "**/mapper/**"
-
-issues:
-  ignore:
-    - patternId: "Password"
-      paths:
-        - "code/trendsellr-application/src/test/**"
+    - "**/src/test/**"
