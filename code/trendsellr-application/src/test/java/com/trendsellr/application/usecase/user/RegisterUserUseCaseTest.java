@@ -22,6 +22,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class RegisterUserUseCaseTest {
 
+    private static final String RAW_PASSWORD = "password123";
+
+    private static final String HASHED_PASSWORD = "hashed-password-abc";
+
     @Mock
     private UserRepository userRepository;
 
@@ -37,12 +41,11 @@ class RegisterUserUseCaseTest {
         // Given
         final User inputUser = User.builder()
                 .email("newuser@example.com")
-                .password("plain-password")
+                .password(RAW_PASSWORD)
                 .build();
-        final String hashedPassword = "hashed-password-123";
 
         when(this.userRepository.findByEmail(inputUser.getEmail())).thenReturn(Optional.empty());
-        when(this.passwordEncoder.encode(inputUser.getPassword())).thenReturn(hashedPassword);
+        when(this.passwordEncoder.encode(inputUser.getPassword())).thenReturn(HASHED_PASSWORD);
         when(this.userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // When
@@ -54,7 +57,7 @@ class RegisterUserUseCaseTest {
         final User capturedUser = userCaptor.getValue();
 
         assertNotNull(capturedUser.getId());
-        assertEquals(hashedPassword, capturedUser.getPassword());
+        assertEquals(HASHED_PASSWORD, capturedUser.getPassword());
         assertNotNull(capturedUser.getMetadata());
         assertEquals(1, capturedUser.getMetadata().getVersion());
         assertTrue(capturedUser.getRoles().contains(Role.USER));

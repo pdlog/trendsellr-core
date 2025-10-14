@@ -1,9 +1,11 @@
 package com.trendsellr.application.service;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.trendsellr.domain.model.user.Role;
 import com.trendsellr.domain.model.user.User;
 import com.trendsellr.domain.service.JwtService;
@@ -20,13 +22,12 @@ class JwtServiceImplTest {
 
     private JwtService jwtService;
 
-    private final String secretKey = "a-very-long-and-secure-test-secret-that-is-at-least-256-bits-long";
+    private static final String TEST_SECRET_KEY = "a-very-long-and-secure-test-secret-that-is-at-least-256-bits-long";
 
     @BeforeEach
     void setUp() {
-        // 1 hora
-        long expirationTime = 3600000;
-        this.jwtService = new JwtServiceImpl(this.secretKey, expirationTime);
+        final long expirationTime = 3600000;
+        this.jwtService = new JwtServiceImpl(TEST_SECRET_KEY, expirationTime);
     }
 
     @Test
@@ -45,7 +46,10 @@ class JwtServiceImplTest {
         // Then
         assertNotNull(token);
 
-        final var decodedJWT = JWT.decode(token);
+        final Algorithm algorithm = Algorithm.HMAC256(TEST_SECRET_KEY);
+        final JWTVerifier verifier = JWT.require(algorithm).build();
+        final DecodedJWT decodedJWT = verifier.verify(token);
+
         assertEquals(user.getEmail(), decodedJWT.getSubject());
         assertTrue(decodedJWT.getClaim("roles").asList(String.class).contains("USER"));
         assertTrue(decodedJWT.getClaim("roles").asList(String.class).contains("ADMIN"));
@@ -70,7 +74,7 @@ class JwtServiceImplTest {
     @DisplayName("Given an expired token, when getUserIdFromToken is called, then should throw TokenExpiredException")
     void givenExpiredToken_whenGetUserIdFromToken_thenShouldThrowException() {
         // Given
-        final Algorithm algorithm = Algorithm.HMAC256(this.secretKey);
+        final Algorithm algorithm = Algorithm.HMAC256(TEST_SECRET_KEY);
         final String expiredToken = JWT.create()
                 .withSubject("user@example.com")
                 .withExpiresAt(new Date(System.currentTimeMillis() - 10000)) // Expiró hace 10 segundos
